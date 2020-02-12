@@ -39,13 +39,12 @@ tf = create_transition_dictionary_for_ENFA()
 
 
 def convert_enfa_to_nfa(states, alphabet, tf):
-    print(type(states))
+    #print(type(states))
     to_check = {}
     nfa_dictionary = create_dictionary()
     finale = set()
     for state in states:
         for c in alphabet:
-            print(c + " " + str(state))
             finale.update(set(str(state)))
             to_check = finale.copy()
             finale.clear()
@@ -53,7 +52,6 @@ def convert_enfa_to_nfa(states, alphabet, tf):
                 finale.update(where_to_nfa("epsilon", int(st), tf))
             for i in finale:
                 if str(i) in finish_states:
-                    print("True")
                     nfa_final_states.add(str(state))
                     break
             to_check = finale.copy()
@@ -87,26 +85,45 @@ def where_to_nfa(c, s, tf):
 
 
 prova = convert_enfa_to_nfa(states, alphabet, tf)
-print(prova)
-print(nfa_final_states)
+#print(prova)
+#print(nfa_final_states)
 
 """ NFA to DFA """
 
 
-def where_to_dfa(current, alphabet):
-    pass
+def where_to_dfa(current, alphabet, tf):
+    str_ls_cstate = [current]
+    tmp = set()
+    sq = list()
+    final_trans_states = list()
+    for c in alphabet:
+        for s in str_ls_cstate:
+            print(int(s))
+            sq.append(str(tf[c][int(current)]))
+            print(sq)
+            for ch in sq:
+                tmp.add(ch)
+        sq = list(tmp)
+        sq.sort()
+        s1 = "".join(sq)
+        final_trans_states.append(s1)
+        print(final_trans_states)
+    return final_trans_states
 
 
 def convert_nfa_to_dfa(states, alphabet, tf):
-    to_check = set(states[0])
+    s0 = states.reshape(-1)[0]
+    to_check = {int(s0)}
     checked = set()
     dfa_transitions = {states[0]: []}
     while to_check:
         current = to_check.pop()
-        tmp = where_to_dfa(current, alphabet)
+        tmp = where_to_dfa(current, alphabet,tf)
         for item in tmp:
             if item not in checked:
-                checked.add(item)
                 to_check.add(item)
+        checked.add(current)
         dfa_transitions[current] = tmp
-
+    
+dfa = convert_nfa_to_dfa(states, alphabet, prova)
+print(dfa)
