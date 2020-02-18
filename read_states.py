@@ -1,12 +1,15 @@
 import pandas as pd
 import numpy as np
-
-filename = "Machine_States.csv"  # duhet marr input nga perdoruesi
-
+#shiko dhe shembullin e klejdit rekursioni i pafund...
+#filename = "prova1.csv"  # duhet marr input nga perdoruesi punoi
+#filename = "prova2.csv"  #punoi
+#filename = "prova3.csv"  #punoi
+filename = "prova4.csv"  #punoi
+#filename = "Machine_States.csv"
 dataset = pd.read_csv(filename)
 alphabet = ["a", "b"]  # input nga perdoruesi
 start_state = 1  # input nga perdoruesi
-finish_states = ["3"]  # input nga perdoruesi
+finish_states = ["2"]  # input nga perdoruesi
 nfa_final_states = set()
 
 
@@ -89,41 +92,98 @@ prova = convert_enfa_to_nfa(states, alphabet, tf)
 #print(nfa_final_states)
 
 """ NFA to DFA """
-
+final_states_dfa = set()
 
 def where_to_dfa(current, alphabet, tf):
-    str_ls_cstate = [current]
+    str_ls_cstate = str(current)
     tmp = set()
     sq = list()
     final_trans_states = list()
+    #print("gjendja aktuale ne shqyrtim: " +str_ls_cstate)
     for c in alphabet:
         for s in str_ls_cstate:
-            print(int(s))
-            sq.append(str(tf[c][int(current)]))
-            print(sq)
+            #print("s as str: " +s)
+            #print(int(s))
+            sq.extend((tf[c][int(s)]))
+            #print(sq)
             for ch in sq:
                 tmp.add(ch)
         sq = list(tmp)
         sq.sort()
+        if len(sq) != 1 and "-1" in sq:
+                 sq.remove("-1")
         s1 = "".join(sq)
+        sq.clear()
+        tmp.clear()
+        #print("s1 " + s1)
         final_trans_states.append(s1)
-        print(final_trans_states)
     return final_trans_states
 
 
 def convert_nfa_to_dfa(states, alphabet, tf):
-    s0 = states.reshape(-1)[0]
-    to_check = {int(s0)}
+    to_check = {str(states[0])}
     checked = set()
-    dfa_transitions = {states[0]: []}
+    dfa_transitions = {str(states[0]): []}
     while to_check:
         current = to_check.pop()
         tmp = where_to_dfa(current, alphabet,tf)
         for item in tmp:
-            if item not in checked:
+            if item not in checked and item != '-1':
                 to_check.add(item)
-        checked.add(current)
+        checked.add(str(current))
+        for fs in nfa_final_states:
+            if str(fs) in str(current):
+                final_states_dfa.add(current)
         dfa_transitions[current] = tmp
-    
+    return dfa_transitions
 dfa = convert_nfa_to_dfa(states, alphabet, prova)
-print(dfa)
+#print(dfa)
+
+""" Minimization NFA """
+
+all_states = dfa.keys()
+all_states2 = set(all_states)
+non_final_states = all_states2 - final_states_dfa
+#print(all_states)
+#print(all_states2)
+#print(non_final_states)
+
+tmp_for_states_list = list(all_states2)
+tmp_for_states_list.sort()
+#print(tmp_for_states_list)
+
+nr_states = len(tmp_for_states_list)
+
+the_2d_table = a = [[-1 for x in range(nr_states)] for y in range(nr_states)]
+#print(the_2d_table)
+
+
+for i in range(1, nr_states):
+    print("i : {}".format(i))
+    for j in range(0, i):
+        print("j : {}".format(j))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
