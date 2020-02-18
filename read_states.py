@@ -157,11 +157,12 @@ nr_states = len(tmp_for_states_list)
 the_2d_table = a = [[-1 for x in range(nr_states)] for y in range(nr_states)]
 #print(the_2d_table)
 
-
-for i in range(1, nr_states):
-    print("i : {}".format(i))
-    for j in range(0, i):
-        print("j : {}".format(j))
+while(flag):
+    for i in range(1, nr_states):
+        print("i : {}".format(i))
+        for j in range(0, i):
+            print("j : {}".format(j))
+            if(tmp_for_states_list[i] in non_final_states and tmp_for_states_list[j] in final_states_dfa)
 
 
 
