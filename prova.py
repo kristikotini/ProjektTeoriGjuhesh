@@ -1,4 +1,2 @@
-l1 = ["14", "13", "1111111", "21", "0"]
-print(l1)
-l1.sort()
-print(l1)
+for i in range(0, 10):
+    print(i)
