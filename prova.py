@@ -1,2 +1,2 @@
-l1 = ["4", "3", "1", "2", "0"]
-print(str(l1))
+for i in range(0, 10):
+    print(i)
